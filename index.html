@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>whexu | merision</title>
+    <title>whexu | merision</title> <!-- Изменено здесь -->
     <style>
         :root {
             --dark-bg: #0a0a0a;
@@ -32,6 +32,31 @@
             position: relative;
         }
 
+        /* Dynamic background lines */
+        .lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .line {
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            transform-origin: top;
+        }
+
+        .line:nth-child(1) { left: 10%; }
+        .line:nth-child(2) { left: 30%; }
+        .line:nth-child(3) { left: 50%; }
+        .line:nth-child(4) { left: 70%; }
+        .line:nth-child(5) { left: 90%; }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -39,14 +64,17 @@
         }
 
         header {
-            padding: 3rem 0;
+            padding: 2rem 0;
             text-align: center;
             background-color: var(--dark-surface);
             border-bottom: 1px solid var(--dark-border);
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
         }
 
         .logo {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
@@ -54,7 +82,7 @@
 
         .tagline {
             color: var(--text-secondary);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 1rem;
         }
 
@@ -62,84 +90,194 @@
             display: inline-block;
             background-color: transparent;
             color: var(--accent);
-            padding: 8px 20px;
+            padding: 5px 15px;
             border-radius: 20px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
             border: 1px solid var(--accent);
-            margin-bottom: 2rem;
         }
 
-        .navigation {
+        .tabs-container {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
+            margin: 2rem 0;
             flex-wrap: wrap;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
         }
 
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: var(--transition);
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
+        .tab {
+            padding: 12px 30px;
             background-color: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
         }
 
-        .content-section {
-            padding: 4rem 0;
-            border-bottom: 1px solid var(--dark-border);
+        .tab:hover {
+            color: var(--text-primary);
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
 
-        .content-section:last-child {
-            border-bottom: none;
+        .tab.active {
+            background-color: transparent;
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .tab:nth-child(1) { animation-delay: 0.6s; }
+        .tab:nth-child(2) { animation-delay: 0.7s; }
+        .tab:nth-child(3) { animation-delay: 0.8s; }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            background-color: var(--dark-surface);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--dark-border);
+            animation: fadeIn 0.5s ease;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 1s forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
             color: var(--text-primary);
-            text-align: center;
+            position: relative;
+            display: inline-block;
         }
 
-        .services-grid {
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        /* Price Tab Styles */
+        .pricing-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
-        .service-card {
+        .pricing-card {
             background-color: var(--dark-card);
             border-radius: 12px;
             padding: 2rem;
-            border: 1px solid var(--dark-border);
+            text-align: center;
             transition: var(--transition);
+            border: 1px solid var(--dark-border);
+            color: var(--text-primary);
         }
 
-        .service-card:hover {
+        .pricing-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent);
         }
 
-        .service-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            color: var(--text-primary);
         }
 
+        .price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .features li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+        }
+
+        .service-category {
+            margin-bottom: 3rem;
+        }
+
+        .service-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        /* Bio Tab Styles */
         .bio-content {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 3rem;
             align-items: start;
+            color: var(--text-primary);
         }
 
         .profile-img {
@@ -148,12 +286,53 @@
             border: 1px solid var(--dark-border);
         }
 
+        .bio-text h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent);
+        }
+
+        .timeline {
+            margin-top: 2rem;
+        }
+
+        .timeline-item {
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+            border-left: 2px solid var(--accent);
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Project Tab Styles */
         .project-card {
             background-color: var(--dark-card);
             border-radius: 12px;
             padding: 2rem;
             margin-top: 2rem;
             border: 1px solid var(--dark-border);
+            transition: var(--transition);
+            color: var(--text-primary);
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
         }
 
         .project-title {
@@ -162,9 +341,28 @@
             color: var(--accent);
         }
 
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .project-link:hover {
+            color: var(--text-primary);
+        }
+
         footer {
             text-align: center;
-            padding: 3rem 0;
+            padding: 2rem 0;
             color: var(--text-secondary);
             border-top: 1px solid var(--dark-border);
             margin-top: 2rem;
@@ -185,107 +383,198 @@
             transition: var(--transition);
         }
 
+        .telegram-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .bio-content {
                 grid-template-columns: 1fr;
             }
             
-            .navigation {
+            .tabs-container {
                 flex-direction: column;
                 align-items: center;
-                gap: 1rem;
+            }
+            
+            .tab {
+                width: 100%;
+                max-width: 300px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Dynamic background lines -->
+    <div class="lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
     <header>
         <div class="container">
             <div class="logo">whexu</div>
-            <p class="tagline">merision | honest</p>
+            <p class="tagline">confidential | honest</p> <!-- Изменено здесь -->
             <div class="nickname">@whexu</div>
-            
-            <div class="navigation">
-                <a href="#services" class="nav-link">услуги</a>
-                <a href="#biography" class="nav-link">biography</a>
-                <a href="#project" class="nav-link">проект</a>
-            </div>
         </div>
     </header>
 
     <div class="container">
-        <section id="services" class="content-section">
-            <h2>услуги</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <h3 class="service-title">Защита (DEFF)</h3>
-                    <div class="price">300₽ <span>/ 5$ в месяц</span></div>
-                    <ul>
-                        <li>Базовая защита цифровой личности</li>
-                        <li>Консультации по безопасности</li>
-                        <li>Мониторинг угроз</li>
-                    </ul>
-                </div>
-                
-                <div class="service-card">
-                    <h3 class="service-title">Обучение монтажу</h3>
-                    <div class="price">500₽ <span>/ 7$</span></div>
-                    <ul>
-                        <li>Основы видеомонтажа</li>
-                        <li>Работа с программами</li>
-                        <li>Практические задания</li>
-                    </ul>
-                </div>
-                
-                <div class="service-card">
-                    <h3 class="service-title">OSINT обучение</h3>
-                    <div class="price">1000-2500₽ <span>/ 13-30$</span></div>
-                    <ul>
-                        <li>Базовые и продвинутые методики</li>
-                        <li>Инструменты и ресурсы</li>
-                        <li>Персональный подход</li>
-                    </ul>
+        <div class="tabs-container">
+            <button class="tab active" data-tab="services">услуги</button>
+            <button class="tab" data-tab="biography">biography</button>
+            <button class="tab" data-tab="project">проект</button>
+        </div>
+
+        <div id="services" class="tab-content active">
+            <h2>Услуги и цены</h2>
+            <p>Специализированные OSINT услуги для ваших нужд</p>
+            
+            <div class="service-category">
+                <h3>Защита (DEFF)</h3>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>На месяц</h3>
+                        <div class="price">300₽ <span>/ 5$</span></div>
+                        <ul class="features">
+                            <li>Базовая защита цифровой личности</li>
+                            <li>Консультации по безопасности</li>
+                            <li>Мониторинг угроз</li>
+                        </ul>
+                        <a href="https://t.me/whexu" class="btn">Заказать</a>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3>На полгода</h3>
+                        <div class="price">600₽ <span>/ 8$</span></div>
+                        <ul class="features">
+                            <li>Расширенная защита</li>
+                            <li>Постоянный мониторинг</li>
+                            <li>Приоритетная поддержка</li>
+                        </ul>
+                        <a href="https://t.me/whexu" class="btn">Заказать</a>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3>На год</h3>
+                        <div class="price">1000₽ <span>/ 13$</span></div>
+                        <ul class="features">
+                            <li>Полная защита на год</li>
+                            <li>Персональный подход</li>
+                            <li>Экстренная поддержка 24/7</li>
+                        </ul>
+                        <a href="https://t.me/whexu" class="btn">Заказать</a>
+                    </div>
                 </div>
             </div>
-        </section>
+            
+            <div class="service-category">
+                <h3>Обучение</h3>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>По монтажу</h3>
+                        <div class="price">500₽ <span>/ 7$</span></div>
+                        <ul class="features">
+                            <li>Основы видеомонтажа</li>
+                            <li>Работа с программами</li>
+                            <li>Практические задания</li>
+                        </ul>
+                        <a href="https://t.me/whexu" class="btn">Заказать</a>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3>OSINT (базовый)</h3>
+                        <div class="price">1000₽ <span>/ 13$</span></div>
+                        <ul class="features">
+                            <li>Необходимые знания</li>
+                            <li>Основные инструменты</li>
+                            <li>Базовые методики</li>
+                        </ul>
+                        <a href="https://t.me/whexu" class="btn">Заказать</a>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3>OSINT (полный)</h3>
+                        <div class="price">2500₽ <span>/ 30$</span></div>
+                        <ul class="features">
+                            <li>Обучаю всему что знаю</li>
+                            <li>Продвинутые методики</li>
+                            <li>Персональный подход</li>
+                            <li>Пожизненная поддержка</li>
+                        </ul>
+                        <a href="https://t.me/whexu" class="btn">Заказать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <section id="biography" class="content-section">
-            <h2>biography</h2>
+        <div id="biography" class="tab-content">
+            <h2>Карьера</h2>
+            
             <div class="bio-content">
                 <div class="profile">
                     <div class="profile-img" style="height: 300px; background: linear-gradient(135deg, #333, #555); display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem;">
-                        <!-- Placeholder for profile image -->
+                        <i class="fas fa-user-secret"></i>
                     </div>
                 </div>
                 
                 <div class="bio-text">
-                    <h3>Карьера</h3>
-                    <p><strong>2019</strong> - Пришел в комьюнити, начал обучение основам OSINT и цифровой безопасности.</p>
-                    <p><strong>2021</strong> - Основал фамилию "False", создал личности "Merision False" и "Alexey False".</p>
-                    <p><strong>2022</strong> - Период конфликтности и последующего переосмысления стратегии.</p>
-                    <p><strong>2024</strong> - Временный перерыв из-за переезда.</p>
-                    <p><strong>2025</strong> - Возвращение с обновленными силами, работа в основном стаке анон кидс.</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-year">2019</div>
+                            <p>Пришел в комьюнити, только начал обучение. Основы понимания OSINT и цифровой безопасности.</p>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-year">2021</div>
+                            <p>Основал фамилию "False", от нее произошли такие личности как "Merision False" а также "Alexey False". Начал формировать собственную идентичность в сообществе.</p>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-year">2022</div>
+                            <p>Будучи конфликтным человеком, заработал враждебность с жери (на тот момент достаточно феймовая личность). После его успешной валидации, решаю убрать свою конфликтность. Подсел на такую лику как "Karra". Не был активным, считай находился в афк.</p>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-year">2024</div>
+                            <p>Из-за переезда встал в афк. Период переоценки ценностей и стратегии развития.</p>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-year">2025</div>
+                            <p>Решил вернуться с новыми силами. Сейчас нахожусь в основном стаке анон кидс, имею средний фейм. Продолжаю развиваться в области OSINT и цифровой безопасности.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section id="project" class="content-section">
-            <h2>проект</h2>
+        <div id="project" class="tab-content">
+            <h2>Проекты</h2>
+            <p>Мои текущие и завершенные проекты</p>
+            
             <div class="project-card">
                 <h3 class="project-title">Haseulev</h3>
-                <p>Основной проект, посвященный исследованиям в области OSINT и цифровой безопасности. Платформа для обмена знаниями и опытом с сообществом.</p>
-                <a href="https://t.me/haseulev" class="telegram-link" target="_blank">
+                <p class="project-description">
+                    Основной проект, посвященный исследованиям в области OSINT и цифровой безопасности. 
+                    Платформа для обмена знаниями и опытом с сообществом.
+                </p>
+                <a href="https://t.me/haseulev" class="project-link" target="_blank">
                     Перейти к проекту →
                 </a>
             </div>
-        </section>
+        </div>
     </div>
 
     <footer>
         <div class="container">
-            <p>© 2025 whexu | confidential</p>
+            <p>© 2025 whexu | confidential</p> <!-- Изменено здесь -->
             <div class="contact-info">
-                <p>Связь через Telegram:</p>
+                <p>Связь исключительно через Telegram:</p>
                 <a href="https://t.me/whexu" class="telegram-link" target="_blank">
                     @whexu
                 </a>
@@ -294,15 +583,32 @@
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const lines = document.querySelectorAll('.line');
+            
+            // Tab switching functionality
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Dynamic lines animation
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                lines.forEach((line, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const x = (mouseX * speed * 10) - 5;
+                    line.style.transform = `translateX(${x}px)`;
                 });
             });
         });
